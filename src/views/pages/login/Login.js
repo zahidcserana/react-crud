@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -15,8 +15,79 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
+import { getUser } from '../../../user'
 
 const Login = () => {
+  const navigate = useNavigate()
+  const [params, setParams] = useState({})
+  const [errors, setErrors] = useState({})
+  const handleChange = (e) => {
+    const { name, value } = e.target
+
+    setParams((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      }
+    })
+
+    setError(name, '')
+    setError('not_registered', '')
+    if (name === 'password') {
+      setError('incorrect_password', '')
+    }
+  }
+
+  const user = getUser()
+
+  useEffect(() => {
+    if (user) {
+      navigate('/') //events
+    }
+  }, [])
+
+  const setError = (name, value) => {
+    setErrors((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      }
+    })
+  }
+
+  const login = () => {
+    const { email, password } = params
+
+    if (!email) {
+      setError('email', 'email is required')
+    }
+
+    if (!password) {
+      setError('password', 'password is required')
+    }
+
+    if (email && password) {
+      const users = []
+
+      users.push(...(JSON.parse(localStorage.getItem('users')) || []))
+
+      const exist = users.find((u) => u?.email === params.email)
+      if (exist) {
+        if (exist.password !== params.password) {
+          setError('incorrect_password', 'Incorrect Password')
+        } else {
+          localStorage.setItem('user', JSON.stringify(exist))
+          exist.login = true
+          localStorage.setItem('users', JSON.stringify(users))
+          navigate('/') //events
+          setParams({})
+        }
+      } else {
+        setError('not_registered', 'User not Registered')
+      }
+    }
+  }
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -28,17 +99,29 @@ const Login = () => {
                   <CForm>
                     <h1>Login</h1>
                     <p className="text-medium-emphasis">Sign In to your account</p>
+                    <div className="space"></div>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" />
+                      <CFormInput
+                        type="text"
+                        name="email"
+                        value={params.email || ''}
+                        onChange={handleChange}
+                        placeholder="Email"
+                        autoComplete="email"
+                      />
+                      {!!errors.email && <span className="mandatory">{errors.email}</span>}
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
                         <CIcon icon={cilLockLocked} />
                       </CInputGroupText>
                       <CFormInput
+                        name="password"
+                        value={params.password || ''}
+                        onChange={handleChange}
                         type="password"
                         placeholder="Password"
                         autoComplete="current-password"
@@ -46,7 +129,7 @@ const Login = () => {
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4">
+                        <CButton color="primary" className="px-4" onClick={() => login()}>
                           Login
                         </CButton>
                       </CCol>

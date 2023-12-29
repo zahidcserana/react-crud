@@ -1,1 +1,9 @@
-// Here you can add other styles
+label .mandatory {
+  color: red;
+  font-size: unset;
+}
+
+.mandatory {
+  color: red;
+  font-size: 13px;
+} // Here you can add other styles
