@@ -17,7 +17,7 @@ const DefaultLayout = () => {
         <div className="body flex-grow-1 px-3">
           {spinner ? (
             <div className="divLoader">
-              <RingLoader color="#36d7b7" />
+              <RingLoader size="80" color="#00cca3" />
             </div>
           ) : (
             <AppContent />
