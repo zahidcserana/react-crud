@@ -6,4 +6,12 @@ label .mandatory {
 .mandatory {
   color: red;
   font-size: 13px;
-} // Here you can add other styles
+}
+
+.divLoader {
+  width: 85vw;
+  height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
