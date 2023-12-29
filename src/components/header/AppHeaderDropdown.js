@@ -22,30 +22,15 @@ import {
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { useNavigate } from 'react-router-dom'
-import { getUser, loggedUser } from '../../user'
 import avatar8 from './../../assets/images/avatars/8.jpg'
+import { getUser } from 'src/user'
 
 const AppHeaderDropdown = () => {
   const navigate = useNavigate()
-  const userLogged = loggedUser()
-
-  if (!userLogged) {
-    navigate('/login')
-  }
-
-  const user = getUser()
   const logOut = () => {
-    console.log('user')
-    const users = []
-
-    users.push(...(JSON.parse(localStorage.getItem('users')) || []))
-
-    const user = users.find((u) => u.login)
-
+    const user = getUser()
     if (user) {
       localStorage.removeItem('user')
-      user.login = undefined
-      localStorage.setItem('users', JSON.stringify(users))
       navigate('/')
     }
   }

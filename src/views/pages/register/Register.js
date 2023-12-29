@@ -25,8 +25,9 @@ const Register = () => {
 
   useEffect(() => {
     if (user) {
-      navigate('/') //events
+      navigate('/dashboard')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleChange = (e) => {

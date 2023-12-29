@@ -38,12 +38,13 @@ const Login = () => {
     }
   }
 
-  const user = getUser()
-
   useEffect(() => {
+    const user = getUser()
+
     if (user) {
-      navigate('/') //events
+      navigate('/dashboard')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const setError = (name, value) => {
@@ -79,7 +80,7 @@ const Login = () => {
           localStorage.setItem('user', JSON.stringify(exist))
           exist.login = true
           localStorage.setItem('users', JSON.stringify(users))
-          navigate('/') //events
+          navigate('/dashboard')
           setParams({})
         }
       } else {
