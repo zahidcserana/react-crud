@@ -29,6 +29,9 @@ const Dropdowns = React.lazy(() => import('./views/buttons/dropdowns/Dropdowns')
 const ChecksRadios = React.lazy(() => import('./views/forms/checks-radios/ChecksRadios'))
 const FloatingLabels = React.lazy(() => import('./views/forms/floating-labels/FloatingLabels'))
 const FormControl = React.lazy(() => import('./views/forms/form-control/FormControl'))
+const UserForm = React.lazy(() => import('./views/users/create'))
+const UserEdit = React.lazy(() => import('./views/users/edit'))
+const UserList = React.lazy(() => import('./views/users/index'))
 const InputGroup = React.lazy(() => import('./views/forms/input-group/InputGroup'))
 const Layout = React.lazy(() => import('./views/forms/layout/Layout'))
 const Range = React.lazy(() => import('./views/forms/range/Range'))
@@ -78,6 +81,9 @@ const routes = [
   { path: '/charts', name: 'Charts', element: Charts },
   { path: '/forms', name: 'Forms', element: FormControl, exact: true },
   { path: '/forms/form-control', name: 'Form Control', element: FormControl },
+  { path: '/users', name: 'Users', element: UserList, exact: true },
+  { path: '/users/create', name: 'User Create', element: UserForm },
+  { path: '/users/edit/:id', name: 'User Edit', element: UserEdit },
   { path: '/forms/select', name: 'Select', element: Select },
   { path: '/forms/checks-radios', name: 'Checks & Radios', element: ChecksRadios },
   { path: '/forms/range', name: 'Range', element: Range },

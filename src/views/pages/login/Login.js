@@ -16,6 +16,7 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import { getUser } from '../../../user'
+import { login } from 'src/api/user'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -56,7 +57,7 @@ const Login = () => {
     })
   }
 
-  const login = () => {
+  const submit = () => {
     const { email, password } = params
 
     if (!email) {
@@ -68,24 +69,18 @@ const Login = () => {
     }
 
     if (email && password) {
-      const users = []
-
-      users.push(...(JSON.parse(localStorage.getItem('users')) || []))
-
-      const exist = users.find((u) => u?.email === params.email)
-      if (exist) {
-        if (exist.password !== params.password) {
-          setError('incorrect_password', 'Incorrect Password')
-        } else {
-          localStorage.setItem('user', JSON.stringify(exist))
-          exist.login = true
-          localStorage.setItem('users', JSON.stringify(users))
+      login(params)
+        .then((response) => {
+          const auth = response.user
+          localStorage.setItem('auth', JSON.stringify(auth))
+          localStorage.setItem('token', auth.access_token)
           navigate('/dashboard')
           setParams({})
-        }
-      } else {
-        setError('not_registered', 'User not Registered')
-      }
+        })
+        .catch((err) => {
+          setError('incorrect_password', err.response.data.message)
+          console.log(err)
+        })
     }
   }
 
@@ -127,10 +122,14 @@ const Login = () => {
                         placeholder="Password"
                         autoComplete="current-password"
                       />
+                      {!!errors.password && <span className="mandatory">{errors.password}</span>}
+                      {!!errors.incorrect_password && (
+                        <span className="mandatory">{errors.incorrect_password}</span>
+                      )}
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4" onClick={() => login()}>
+                        <CButton color="primary" className="px-4" onClick={() => submit()}>
                           Login
                         </CButton>
                       </CCol>

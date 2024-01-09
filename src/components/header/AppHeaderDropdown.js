@@ -30,7 +30,7 @@ const AppHeaderDropdown = () => {
   const logOut = () => {
     const user = getUser()
     if (user) {
-      localStorage.removeItem('user')
+      localStorage.removeItem('auth')
       navigate('/')
     }
   }

@@ -1,6 +1,6 @@
 export const getUser = () => {
-  if ('user' in localStorage) {
-    return JSON.parse(localStorage.getItem('user'))
+  if ('auth' in localStorage) {
+    return JSON.parse(localStorage.getItem('auth'))
   }
 
   return false

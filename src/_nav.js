@@ -195,6 +195,53 @@ const _nav = [
     ],
   },
   {
+    component: CNavGroup,
+    name: 'Users',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Create',
+        to: '/users/create',
+      },
+      {
+        component: CNavItem,
+        name: 'List',
+        to: '/users',
+      },
+      {
+        component: CNavItem,
+        name: 'Edit',
+        to: '/users/edit/:id',
+      },
+      {
+        component: CNavItem,
+        name: 'Range',
+        to: '/forms/range',
+      },
+      {
+        component: CNavItem,
+        name: 'Input Group',
+        to: '/forms/input-group',
+      },
+      {
+        component: CNavItem,
+        name: 'Floating Labels',
+        to: '/forms/floating-labels',
+      },
+      {
+        component: CNavItem,
+        name: 'Layout',
+        to: '/forms/layout',
+      },
+      {
+        component: CNavItem,
+        name: 'Validation',
+        to: '/forms/validation',
+      },
+    ],
+  },
+  {
     component: CNavItem,
     name: 'Charts',
     to: '/charts',
