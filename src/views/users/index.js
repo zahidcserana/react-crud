@@ -5,6 +5,7 @@ import {
   CCardBody,
   CCardHeader,
   CCol,
+  CFormSelect,
   CPagination,
   CPaginationItem,
   CRow,
@@ -16,21 +17,20 @@ import {
   CTableRow,
 } from '@coreui/react'
 import { Layout } from 'src/components'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { getUsers } from 'src/api/user'
 import CIcon from '@coreui/icons-react'
 import { cilPencil } from '@coreui/icons'
-
-// let [last, setLast] = useState()
-let lastPage = 1
-let number = 1
-let size = 2
+import { page } from 'src/utils/config'
 
 const Users = () => {
+  let number = 1
+  const [hasNext, setHasNext] = useState(false)
+  const [hasPrev, setHasPrev] = useState(false)
   let query = {
     page: {
-      number: number,
-      size: size,
+      number: page.number,
+      size: page.size,
     },
   }
   const navigate = useNavigate()
@@ -44,7 +44,8 @@ const Users = () => {
     getUsers(query)
       .then((response) => {
         setUsers(response.data)
-        lastPage = response.meta.page.lastPage
+        setHasNext(response.links.next ? true : false)
+        setHasPrev(response.links.prev ? true : false)
       })
       .catch((err) => {
         console.log(err)
@@ -63,12 +64,23 @@ const Users = () => {
     get()
   }
 
+  const reset = (e) => {
+    query.page.number = 1
+    query.page.size = e.target.value
+    get()
+  }
+
   return (
     <CRow>
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
             <strong>User List</strong>
+            <Link to="/users/create" className="btn-add">
+              <CButton color="primary" className="mt-3" active tabIndex={-1}>
+                Add User
+              </CButton>
+            </Link>
           </CCardHeader>
           <CCardBody>
             <p className="text-medium-emphasis small">filter...</p>
@@ -97,26 +109,39 @@ const Users = () => {
                   ))}
                 </CTableBody>
               </CTable>
-            </Layout>
 
-            <CPagination aria-label="Page navigation example">
-              <CPaginationItem
-                aria-label="Previous"
-                onClick={() => previous()}
-                title={number - 1}
-                disabled={1 === query.page.number}
-              >
-                <span aria-hidden="true">&laquo;</span>
-              </CPaginationItem>
-              <CPaginationItem
-                aria-label="Next"
-                onClick={() => next()}
-                title={number + 1}
-                disabled={lastPage === query.page.number}
-              >
-                <span aria-hidden="true">&raquo;</span>
-              </CPaginationItem>
-            </CPagination>
+              <div>
+                <CPagination aria-label="Page navigation example" className="pagination">
+                  <CPaginationItem
+                    aria-label="Previous"
+                    onClick={() => previous()}
+                    title={'page: ' + (number - 1)}
+                    disabled={!hasPrev}
+                  >
+                    <span aria-hidden="true">&laquo;</span>
+                  </CPaginationItem>
+                  <CPaginationItem
+                    aria-label="Next"
+                    onClick={() => next()}
+                    title={'page: ' + (number + 1)}
+                    disabled={!hasNext}
+                  >
+                    <span aria-hidden="true">&raquo;</span>
+                  </CPaginationItem>
+                </CPagination>
+
+                <CFormSelect
+                  className="page-size"
+                  onChange={reset}
+                  aria-label="Default select example"
+                  options={[
+                    { label: '5', value: '5' },
+                    { label: '10', value: '10' },
+                    { label: '100', value: '100' },
+                  ]}
+                />
+              </div>
+            </Layout>
           </CCardBody>
         </CCard>
       </CCol>

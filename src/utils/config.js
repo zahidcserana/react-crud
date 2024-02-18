@@ -10,3 +10,8 @@ export const config = {
     email: 'analyticalzahid@gmail.com',
   },
 }
+
+export const page = {
+  number: 1,
+  size: 5,
+}

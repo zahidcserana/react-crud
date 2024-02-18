@@ -10,9 +10,10 @@ import {
   CFormLabel,
   CFormTextarea,
   CRow,
+  CSpinner,
 } from '@coreui/react'
 import { Layout } from 'src/components'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { validateEmail } from 'src/user'
 import { editUser, getUser } from 'src/api/user'
 
@@ -21,6 +22,7 @@ const FormControl = () => {
   const [user, setUser] = useState({})
   const [errors, setErrors] = useState({})
   const params = useParams()
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     console.log(params.id)
@@ -71,7 +73,8 @@ const FormControl = () => {
     })
   }
 
-  const register = () => {
+  const edit = () => {
+    setLoading(true)
     const validate = ['name', 'email']
     let errs = {}
     for (let i = 0; i < validate.length; i++) {
@@ -92,7 +95,11 @@ const FormControl = () => {
     })
 
     if (!Object.keys(errs).length) {
-      save()
+      setTimeout(() => {
+        save()
+      }, 1000)
+    } else {
+      setLoading(false)
     }
   }
 
@@ -102,6 +109,7 @@ const FormControl = () => {
         navigate('/users')
       })
       .catch((err) => {
+        setLoading(false)
         setError('registered', err.response.data.message)
         console.log(err)
       })
@@ -112,7 +120,12 @@ const FormControl = () => {
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Add User</strong>
+            <strong>Edit User</strong>
+            <Link to="/users" className="btn-add">
+              <CButton color="primary" className="mt-3" active tabIndex={-1}>
+                User List
+              </CButton>
+            </Link>
           </CCardHeader>
           <CCardBody>
             <Layout>
@@ -158,9 +171,16 @@ const FormControl = () => {
                   ></CFormTextarea>
                 </div>
                 <div className="mb-3">
-                  <CButton onClick={() => register()} color="success" className="mb-3">
-                    Save
-                  </CButton>
+                  {loading ? (
+                    <CButton disabled>
+                      <CSpinner component="span" size="sm" aria-hidden="true" />
+                      Loading...
+                    </CButton>
+                  ) : (
+                    <CButton onClick={() => edit()} color="success" className="mb-3">
+                      Save
+                    </CButton>
+                  )}
                 </div>
               </CForm>
             </Layout>
